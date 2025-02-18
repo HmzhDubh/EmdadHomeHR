@@ -9,6 +9,6 @@ def all_brands(request: HttpRequest):
     return render(request, 'all_brands.html')
 
 
-def brand_details(request: HttpRequest):
+def brand_details(request: HttpRequest, brand_id):
 
     return render(request, 'brand_details.html')

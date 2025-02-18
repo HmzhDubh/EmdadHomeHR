@@ -9,19 +9,23 @@
             <img class='img-thumbnail' src="{% static 'images/emdadHomeMainBg.webp' %}">
         </div>
         <div class="container m-5">
-            <button class="btn btn-primary rounded-5">Log In</button>
+            <a href="{% url 'accounts:register_view' %}" class="btn btn-primary rounded-5">Register</a>
         </div>
         <!-- Employees -->
         <hr>
         <div class="m-5 justify-content-center align-items-center">
-            <h3>Highest Sales Employees (Admin only)</h3>
+            <div class="d-flex justify-content-between">
+
+                <h3>Highest Sales Employees (Admin only)</h3>
+                <a href="{% url 'employee:all_employees' %}" class="text-decoration-none">View More -></a>
+            </div>
             <div class="emp-cards d-flex gap-5 pt-5 ">
                 <div class="card" style="width: 15rem;">
                     <img src="..." class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="{% url 'employee:employee_profile' %}" class="btn btn-primary">Go to profile</a>
+                        <a href="{% url 'employee:employee_profile' 1 %}" class="btn btn-primary">Go to profile</a>
                     </div>
                 </div>
                 <div class="card" style="width: 15rem;">
@@ -53,14 +57,18 @@
         <!-- Brands -->
         <hr>
         <div class="m-5 justify-content-center align-items-center">
-            <h3>Highest Sales Employees (Admin only)</h3>
+            <div class="d-flex justify-content-between">
+
+                <h3>Highest Sales Brands (Admin only)</h3>
+                <a class="text-decoration-none" href="{% url 'brand:all_brands' %}">View More -></a>
+            </div>
             <div class="emp-cards d-flex gap-5 pt-5 ">
                 <div class="card" style="width: 15rem;">
                     <img src="..." class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="{% url 'brand:brand_details' %}" class="btn btn-primary">Brand Details</a>
+                        <a href="{% url 'brand:brand_details' 1 %}" class="btn btn-primary">Brand Details</a>
                     </div>
                 </div>
                 <div class="card" style="width: 15rem;">

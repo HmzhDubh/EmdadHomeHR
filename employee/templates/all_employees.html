@@ -1,7 +1,6 @@
-
 {% extends 'index.html' %}
-{% load static %}
-{% block title %} Brand Details {% endblock %}
+
+{% block title %}All Employees{% endblock %}
 
 {% block main %}
 <main>
@@ -14,19 +13,14 @@
             </ol>
         </nav>
     </div>
-    <div class="container-fluid mt-5 brandCard">
-        <div class="card text-bg-dark">
-            <img src="{% static 'images/emdadhomeLogo.avif' %}" class="card-img" alt="...">
-            <div class="card-img-overlay text-dark">
-                <h5 class="card-title">Brand Name</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small>Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-    </div>
-    <hr>
+    <!-- Employees -->
+
     <div class="m-5 justify-content-center align-items-center">
-        <h3>Highest Sales Employees (Admin only)</h3>
+        <div class="d-flex justify-content-between">
+
+            <h3>Highest Sales Employees (Admin only)</h3>
+            <a href="" class="text-decoration-none">View More -></a>
+        </div>
         <div class="emp-cards d-flex gap-5 pt-5 ">
             <div class="card" style="width: 15rem;">
                 <img src="..." class="card-img-top" alt="...">

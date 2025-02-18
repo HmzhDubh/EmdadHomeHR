@@ -1,0 +1,41 @@
+{% extends 'index.html' %}
+
+{% block title %} Log In {% endblock %}
+
+{% block main %}
+<main>
+    <div class="container justify-content-center shadow rounded p-3 bg-dark mt-5 text-light">
+        <h1 class="text-center m-5">Register</h1>
+        <form class="form d-flex flex-column gap-2" action="{% url 'accounts:register_view' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label class="from-label h2" for="avatar">Photo</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+            </div>
+
+            <label for="email" class="form-label h2">Email</label>
+            <input class="form-control" id="email" name="email" type="email" required>
+
+            <label class="form-label h2" for="id_num">ID Number</label>
+            <input class="form-control" type="text" id="id_num" name="id_num" maxlength="10" minlength="10" required>
+
+            <label class="form-label h2" for="first_name">First Name</label>
+            <input class="form-control" type="text" id="first_name" name="first_name" required>
+
+            <label class="form-label h2" for="last_name">Last Name</label>
+            <input class="form-control" type="text" id="last_name" name="last_name" required>
+
+            <label class="form-label h2" for="password">Password</label>
+            <input class="form-control" type="password" id="password" name="password" required>
+
+            <label class="form-label h2" for="v_password">Verify Password</label>
+            <input class="form-control" type="password" id="v_password" name="v_password" required>
+            <div class="d-flex align-items-center gap-2">
+                <input class="form-check-input h3" type="checkbox" name="agreeToTerms" id="agreeToTerms" required>
+                <label class="form-check-label h4" for="agreeToTerms">I Agree To The <a class="text-decoration-none" href="">Terms of use</a> and <a class="text-decoration-none" href="">Privacy Policy</a></label>
+            </div>
+            <input class="btn btn-primary rounded " type="submit" value="Register">
+    </form>
+    </div>
+</main>
+{% endblock %}

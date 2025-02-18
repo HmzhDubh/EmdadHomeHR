@@ -4,6 +4,6 @@ from django.urls import path
 app_name = 'brand'
 
 urlpatterns = [
-    path('', views.brand_details, name= 'brand_details'),
-    path('', views.all_brands, name= 'all_brands')
+    path('<brand_id>/details/', views.brand_details, name='brand_details'),
+    path('all/', views.all_brands, name='all_brands')
 ]
