@@ -17,13 +17,28 @@
             <div class="card mb-3 w-100 h-100">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="...">
+                        <img src="{{emp.avatar.url}}" class="img-fluid rounded-start h-100 w-100" alt="{{emp.user.first_name}}">
                     </div>
                     <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        <div class="card-body p-4">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center pt-3">
+                                    <h5 class="card-title">Full Name: {{emp.user.first_name}} {{emp.user.last_name}}</h5>
+                                    <p class="card-text">
+                                        <small class="text-body-secondary">Joined At: {{emp.created_at}}</small>
+                                    </p>
+                                    <p class="card-text text-uppercase badge rounded-pill {% if emp.gender == 'female' %}text-bg-danger {% elif emp.gender == 'male' %} text-bg-primary {% endif %}">{{emp.gender}}</p>
+                                </div>
+                                {% if not emp.about == none  %}
+                                    <p class="card-text">Bio: {{emp.about}}</p>
+                                {% endif %}
+                                <p class="card-text">ID: {{emp.id_num}}</p>
+                                <p class="card-text">Vacation Days: {{emp.vacationDays}}</p>
+
+                                {% if not emp.nationality == '' %}
+                                    <p class="card-text">Nationality: {{emp.nationality}}</p>
+                                {% endif %}
+                            <div>
                         </div>
                     </div>
                 </div>
@@ -34,7 +49,7 @@
         <!-- Brands -->
         <hr>
         <div class="m-5 justify-content-center align-items-center">
-            <h3>Highest Sales Employees (Admin only)</h3>
+            <h3>Highest Sales Brands by this Employee (Admin only)</h3>
             <div class="emp-cards d-flex gap-5 pt-5 ">
                 <div class="card" style="width: 15rem;">
                     <img src="..." class="card-img-top" alt="...">
@@ -72,27 +87,84 @@
         </div>
         <hr class="mt-5 mb-5">
         <div class="container requestsAndMessages">
-            <h3>Requests and Messages</h3>
-            <div class="card text-center mt-5   ">
-                <div class="card-header">
+            {% if emp_reqs %}
+            <h3>Requests [{{emp_reqs.count}}]</h3>
+            <div class="mt-2">
+            {% for emp_req in emp_reqs %}
+
+                <div class="card text-center mt-5   ">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="true" href="#">Active</a>
+                            <a class="nav-link {% if emp_req.status == 'approved' %} disabled text-success{% elif emp_req.status == 'declined' %} disabled active {% endif %}" {% if emp_req.status == 'approved' %}aria-current="true" {% endif %} href="{% url 'employee:approve_request' emp_req.id %}">Approve</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link {% if emp_req.status == 'declined' %} disabled text-danger {% elif emp_req.status == 'approved' %} disabled active {% endif %}" {% if emp_req.status == 'declined' %}aria-current="true" {% endif %} href="{% url 'employee:decline_request' emp_req.id %}">Decline</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                            <a href="{% url 'employee:delete_request' emp_req.id %}" class="nav-link"><i class="bi bi-trash text-danger"></i></a>
                         </li>
                     </ul>
+                    <h5>Vacation Request</h5>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                    <div class="card-body align-items-center">
+                    <h6 class="text-start ">{% if emp_req.status == 'approved' %}<i class="bi bi-check2-circle text-success"></i>{% elif emp_req.status == 'declined' %}<i class="bi bi-x-circle-fill text-danger"></i>{% else %}<i class="bi bi-clock-history text-warning"></i>{% endif %} {{emp_req.status}}</h6>
+                    <h5 class="card-title">Reason: {{emp_req.reason}}</h5>
+                    <div class="d-flex gap-1 justify-content-center">
+                    <p class="card-text">From: {{emp_req.start_date}}</p>
+                    <p class="card-text"> To: {{emp_req.end_date}}</p>
+                    </div>
+                    <p class="card-text">{{emp_req.comment}}</p>
+
                 </div>
+                </div>
+            {% endfor %}
             </div>
+            {% endif %}
+            {% if msgs %}
+            <h3>Messages [{{msgs.count}}]</h3>
+            <div class="mt-2">
+                {% for msg in msgs %}
+                <div class="card text-center mt-5   ">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {% if msg.is_viewed == True %} disabled text-success{% else %} active {% endif %}" {% if  msg.is_viewed == False %} aria-current="true" {% endif %} href="{% url 'employee:markRead' msg.id %}">Mark As Read</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if msg.is_viewed == False %} disabled text-danger {% else %} active {% endif %}" {% if msg.is_viewed == True %} aria-current="true" {% endif %} href="{% url 'employee:unread' msg.id %}">Unread</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'employee:delete_message' msg.id %}" class="nav-link"><i class="bi bi-trash text-danger"></i></a>
+                            </li>
+                        </ul>
+                        <h5>Message</h5>
+                    </div>
+
+                    <div class="card-body align-items-center">
+                        <h6 class="text-end ">
+                            {% if msg.is_viewed == True %}
+                                <i class="bi bi-check2-circle text-success"></i>
+                                <small>Viewed</small>
+                            {% else %}
+                                <i class="bi bi-clock-history text-warning"></i>
+                                <small>New Message</small>
+                            {% endif %}
+
+                        </h6>
+                        <div class="text-start mt-4 mb-2">
+                        <h5 class="card-title">Subject: {{msg.subject}}</h5>
+
+                            <h6 class="card-text">Message: {{msg.content}}</h6>
+                            <small class="card-text text-start">Sent At: {{msg.sent_at}}</small>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </main>
 

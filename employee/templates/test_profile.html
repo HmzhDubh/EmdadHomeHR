@@ -1,0 +1,229 @@
+{% extends 'index.html' %}
+{% block title %} {{emp.user.first_name}} {{emp.user.last_name}} Profile {% endblock %}
+
+{% block main %}
+<main class="my-5 mt-5 pt-5">
+    <div class="container pb-3 mb-3">
+        <nav class="ms-2" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'HrApp:home_view' %}" class="text-primary">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" class="text-primary">Employee</a></li>
+                <li class="breadcrumb-item active">Profile</li>
+            </ol>
+        </nav>
+
+        <div class="row g-4 mt-4">
+            <div class="row">
+                <!-- Profile Section -->
+                <div class="col-md-4 col-lg-4">
+                    <div class="card border-0 shadow-lg rounded-4 animate__animated animate__fadeInLeft">
+                        <div class="card-header bg-secondary text-white text-center">
+                            <h4 class="mb-0">Profile</h4>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <!-- Logo -->
+                            <div class="mb-4">
+                                <img src="{{ emp.avatar.url }}" alt="{{emp.user.first_name}}"
+                                     class="img-fluid rounded-circle shadow-lg"
+                                     style="max-width: 150px; height: 150px; object-fit: cover;">
+                            </div>
+
+                            <!-- Employee Details -->
+                            <h5 class="card-title">@{{ emp.user.first_name }} {{emp.user.last_name}}</h5>
+
+                            <p class="text-muted">{{ emp.about }}</p>
+                            <p class="text-muted">{{ emp.id_num }}</p>
+                            <p class="text-muted">Joined At: {{ emp.created_at }}</p>
+
+                            <!-- Profile Completion -->
+                            {% if request.user == emp.user %}
+                            <div class="p-2">
+
+
+                            </div>
+                            {% endif %}
+
+                            <!-- Social Links -->
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-globe me-2"></i>
+                                    <span>Website:</span>
+                                    <a href="{{ emp.user.email }}" class="text-decoration-none">{{ emp.user.email }}</a>
+                                </li>
+
+                            </ul>
+
+                            <!-- Edit Button -->
+                            {% if request.user == emp.user %}
+                            <div class="mt-3">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-8">
+                    <div class="card shadow-lg animate__animated animate__fadeInRight">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>Employee Name</strong></div>
+                                <div class="col-sm-8">{{ emp.name }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>Bio</strong></div>
+                                <div class="col-sm-8">{{ emp.about }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>Email</strong></div>
+                                <div class="col-sm-8">{{ emp.email }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>ID</strong></div>
+                                <div class="col-sm-8">{{ emp.id_num }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>Nationality</strong></div>
+                                <div class="col-sm-8">{{ emp.nationality }}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4"><strong>Gender</strong></div>
+                                <div class="col-sm-8">{{ emp.gender }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Requests Section -->
+                    <div class="card shadow-lg rounded-4 my-4 animate__animated animate__fadeInUp" id="skills-info" style="display: block;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h4 class="d-flex align-items-center gap-2 mb-3">
+                                    <i class="bi bi-pencil"></i>Vacation Request {% if emp_reqs %} [{{emp_reqs.count}}]{% endif %}
+                                </h4>
+                                <div class="d-flex flex-row justify-content-between">
+
+                                    <div class="dropdown">
+                                        <button data-bs-toggle="dropdown" class="dropdown-toggle ">
+                                            <span class="bi bi-plus-circle-fill" style="font-size: 1.6rem;"></span>
+                                        </button>
+                                        <ul class="dropdown-menu arrow-hidden">
+
+                                            <li>
+                                                <a class="dropdown-item" href="{% url 'employee:request_vacation' %}">New Request</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container p-5">
+                                {% if emp_reqs %}
+
+                                    {% for emp_req in emp_reqs %}
+                                        <div class="card text-center mt-5   ">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <ul class="nav nav-tabs card-header-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link {% if emp_req.status == 'approved' %} disabled text-success{% elif emp_req.status == 'declined' %} disabled active {% endif %}" {% if emp_req.status == 'approved' %}aria-current="true" {% endif %} href="{% url 'employee:approve_request' emp_req.id %}">Approve</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link {% if emp_req.status == 'declined' %} disabled text-danger {% elif emp_req.status == 'approved' %} disabled active {% endif %}" {% if emp_req.status == 'declined' %}aria-current="true" {% endif %} href="{% url 'employee:decline_request' emp_req.id %}">Decline</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{% url 'employee:delete_request' emp_req.id %}" class="nav-link"><i class="bi bi-trash text-danger"></i></a>
+                                            </li>
+                                        </ul>
+                                        <h5>Vacation Request</h5>
+                                    </div>
+
+                                    <div class="card-body align-items-center">
+                                        <h6 class="text-start ">{% if emp_req.status == 'approved' %}<i class="bi bi-check2-circle text-success"></i>{% elif emp_req.status == 'declined' %}<i class="bi bi-x-circle-fill text-danger"></i>{% else %}<i class="bi bi-clock-history text-warning"></i>{% endif %} {{emp_req.status}}</h6>
+                                        <h5 class="card-title">Reason: {{emp_req.reason}}</h5>
+                                        <div class="d-flex gap-1 justify-content-center">
+                                            <p class="card-text">From: {{emp_req.start_date}}</p>
+                                            <p class="card-text"> To: {{emp_req.end_date}}</p>
+                                        </div>
+                                        <p class="card-text">{{emp_req.comment}}</p>
+
+                                    </div>
+                                </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="alert alert-danger shadow-sm">No Requests records were found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects Section -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="card shadow-lg rounded-4 animate__animated animate__fadeInUp">
+                                <div class="card-body">
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h4 class="d-flex align-items-center gap-2 mb-3">
+                                            <i class="bi bi-briefcase"></i>Projects
+                                        </h4>
+                                        {% if request.user == org.profile %}
+                                        <div class="text-end mb-3">
+                                            <a href="{% url 'organization:add_project' %}" style="color: black;">
+                                                <span class="bi bi-plus-circle-fill" style="font-size: 1.6rem;"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+                                    <div class="row">
+                                        {% for project in org.project.all %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ project.title }}</h5>
+                                                    <p class="card-text">{{ project.description }}...</p>
+                                                    <p class="card-text">{{ project.tools_used }}</p>
+                                                    <div class="d-flex flex-row gap-3">
+                                                        <a href="{% url 'organization:update_project' project.id %}" class="btn btn-warning">Edit</a>
+                                                        <form method="post" onsubmit="return confirm('Are you sure you want to delete this project?');">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="delete_project" value="{{ project.id }}">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <p>No projects available.</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal for Editing Profile -->
+            <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+</main>
+{% endblock %}

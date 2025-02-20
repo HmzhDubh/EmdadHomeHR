@@ -28,7 +28,8 @@ def register_view(request: HttpRequest):
                 new_user.save()
                 emp = Employee(
                     user = new_user,
-                    about = request.POST['about'],
+                    id_num = request.POST['id_num'],
+                    gender = request.POST['gender'],
                     avatar = request.FILES.get("avatar", Employee._meta.get_field("avatar").get_default()),
                 )
 
@@ -42,7 +43,7 @@ def register_view(request: HttpRequest):
             print(ie)
             messages.error(request, 'This email is already registered, please try another one or login directly', 'alert-danger')
         except Exception as e:
-            print(e)
+            print(e.__class__)
             messages.error(request, 'error in creating your account', 'alert-danger')
 
     return render(request, 'register.html')
@@ -64,6 +65,6 @@ def login_view(request: HttpRequest):
 @login_required
 def logout_view(request):
     logout(request)
-
+    messages.success(request, "Log Out Successfully", 'alert-success')
     return redirect('HrApp:home_view')
 

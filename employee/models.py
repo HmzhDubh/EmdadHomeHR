@@ -10,7 +10,7 @@ class Employee(models.Model):
     id_num = models.CharField(max_length=10)
     nationality = models.CharField(max_length=50, blank=True)
     gender = models.CharField(max_length=10, blank=True)
-    about = models.TextField(blank=True)
+    about = models.TextField(null=True)
     vacationDays = models.SmallIntegerField(default=21)
     created_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(upload_to='images/avatars', default='images/avatars/profileAvatar.jpg')
@@ -24,6 +24,7 @@ class VacationRequest(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    reason = models.TextField(default="None")
     status = models.CharField(max_length=20, default='pending')
 
 
