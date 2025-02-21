@@ -8,6 +8,7 @@ class Employee(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, default='None')
     nationality = models.CharField(max_length=50, blank=True)
     gender = models.CharField(max_length=10, blank=True)
     about = models.TextField(null=True)

@@ -17,7 +17,7 @@
 
     <header>
         <!-- Navbar-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+        <nav class="navbar navbar-expand-sm navbar-light ">
             <div class="container-fluid justify-content-between">
                 <!-- Left elements -->
                 <div class="d-flex">
@@ -111,40 +111,10 @@
                         </ul>
                     </li>
 
-                    {% if request.user.is_authenticated %}
-                    <li class="nav-item me-3 me-lg-1">
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle hidden-arrow" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fas fa-bell fa-lg"></i>
-                                {% if request.user.receiver.all.count > 0 %}
-                                <span class="badge rounded-pill badge-notification bg-danger">{{ request.user.receiver.all.count }}</span>
-                                {% endif %}
-                            </a>
-
-                            <ul
-                                    class="dropdown-menu dropdown-menu-end"
-                                    aria-labelledby="navbarDropdownMenuLink2"
-                            >
-                                <li>
-                                    <p class="ps-2">Unread Message:</p>
-                                </li>
-                                {% for message in request.user.receiver.all %}
-                                {% if not message.is_viewed and not request.user == message.sender %}
-                                <li class="rounded">
-                                    <a href="{% url 'accounts:messages_view' request.user.username %}" class="dropdown-item shadow">{{message.content}}</a>
-                                </li>
-                                {% endif %}
-                                {% endfor %}
-
-                            </ul>
-                        </div>
-                    </li>
-                    {% endif %}
                 </ul>
 
-                <!-- Right elements -->
             </div>
         </nav>
-        <!-- Navbar -->
     </header>
 
     {% if messages %}
@@ -165,13 +135,13 @@
     {% block main %}{% endblock %}
     <footer class="custom-footer bg-candidate text-dark">
         <hr class="mt-5 mb-5">
-        <div class="container">
-            <div class="footer-content">
+        <div class="row container justify-content-center m-5">
+            <div class="footer-content col-lg-8">
                 <div class="about-section">
-                    <h5>Joblet</h5>
-                    <p>Your trusted platform for finding your perfect job match. Discover the perfect fit for your needs with ease and confidence.</p>
+                    <h5>EmdadHome</h5>
+                    <p>Your trusted platform for finding your data. Discover the perfect fit for your needs with ease and confidence.</p>
                 </div>
-                <div class="social-section">
+                <div class="social-section mt-4 mb-5">
                     <h5>Follow Us</h5>
                     <div class="social-icons">
                         <a href="http://www.facebook.com" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
@@ -180,8 +150,23 @@
                     </div>
                 </div>
             </div>
+
+                <div class="col-lg-2 col-sm-2">
+                    <h5>Links</h5>
+                    <a class="row">Links</a>
+                    <a class="row">Links</a>
+                    <a class="row">Links</a>
+                </div>
+                <div class="col-lg-2 col-sm-2">
+                    <h5>Links</h5>
+                    <a class="row">Links</a>
+                    <a class="row">Links</a>
+                    <a class="row">Links</a>
+                </div>
+
+
         </div>
-        <div class="bg-dark text-light text-center alight-items-center">
+        <div class="bg-dark text-light text-center sticky-bottom alight-items-center">
             <p class="p-3">© 2024 HMZH. All Rights Reserved. | <a class="text-decoration-none" href="#">Privacy Policy</a></p>
         </div>
     </footer>

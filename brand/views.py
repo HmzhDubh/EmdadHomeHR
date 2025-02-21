@@ -69,7 +69,8 @@ def update_brand(request: HttpRequest,brand_id):
             with transaction.atomic():
                 brand.name = request.POST['name']
                 brand.about = request.POST['about']
-                brand.logo = request.FILES['logo']
+
+                if 'logo' in request.FILES: brand.logo = request.FILES['logo']
 
                 brand.save()
 

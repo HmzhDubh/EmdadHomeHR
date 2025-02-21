@@ -5,6 +5,7 @@ app_name = 'employee'
 
 urlpatterns = [
     path('<user_name>/profile/', views.employee_profile, name="employee_profile"),
+    path('<user_name>/profile/update', views.update_employee, name="update_employee"),
     path('all/', views.all_employees, name="all_employees"),
     path('vacation/', views.request_vacation, name="request_vacation"),
     path('vacation/<req_id>/delete/', views.delete_request, name="delete_request"),

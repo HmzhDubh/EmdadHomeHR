@@ -8,7 +8,9 @@ from datetime import datetime
 
 
 def employee_profile(request: HttpRequest, user_name):
-
+    nationalities = [
+        "bangladesh", "egypt", "India", "saudi", "syrian", "yemen"
+    ]
     user = User.objects.get(username=user_name)
     if not Employee.objects.filter(user = user).first():
         new_emp_profile = Employee(user=user)
@@ -18,7 +20,7 @@ def employee_profile(request: HttpRequest, user_name):
 
     emp_reqs = VacationRequest.objects.filter(employee = employee)
     msgs = Messages.objects.filter(sender = user)
-    return render(request, 'test_profile.html', context={'emp': employee, 'emp_reqs':emp_reqs, 'msgs': msgs})
+    return render(request, 'employee_profile.html', context={'emp': employee, 'nationalities': nationalities, 'emp_reqs':emp_reqs, 'msgs': msgs})
 
 
 def all_employees(request: HttpRequest):
@@ -27,9 +29,29 @@ def all_employees(request: HttpRequest):
     return render(request, 'all_employees.html', context={'employees': employees})
 
 
-def update_employee(request: HttpRequest, emp_id):
+def update_employee(request: HttpRequest, user_name):
 
-    employee = Employee.objects.get(pk=emp_id)
+    user = User.objects.get(username=user_name)
+    employee = Employee.objects.get(user=user)
+    try:
+
+        employee.id_num = request.POST['id_num']
+        employee.phone_num = request.POST['phone_num']
+        employee.about = request.POST['about']
+        employee.nationality = request.POST['nationality']
+        employee.gender = request.POST['gender']
+
+        employee.user.first_name = request.POST['first_name']
+        employee.user.last_name = request.POST['last_name']
+        employee.user.last_name = request.POST['last_name']
+        employee.save()
+        employee.user.save()
+        messages.success(request, 'Profile was updated successfully', 'alert-success')
+        return redirect('employee:employee_profile', user_name = user.username)
+    except Exception as e:
+        print(e.__class__)
+        messages.error(request, 'Error Updating the Profile', 'alert-danger')
+        return redirect('employee:employee_profile', user_name = user.username)
 
 
 def countDays(date1_str, date2_str):
